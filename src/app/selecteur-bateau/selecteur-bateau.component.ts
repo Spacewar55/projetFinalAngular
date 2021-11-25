@@ -1,41 +1,43 @@
 import { Component, OnInit } from '@angular/core';
-// import { HttpClient } from 'angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-selecteur-bateau',
   templateUrl: './selecteur-bateau.component.html',
   styleUrls: ['./selecteur-bateau.component.scss']
 })
+
 export class SelecteurBateauComponent implements OnInit {
 
-  // private minString = 3;
-  // private maxString = 40;
+  private minString = 3;
+  private maxString = 40;
 
-  // public listebateau:any;
+  public listebateau:any;
 
-  // rechercheDeBateau = "https://iwa2021.edriki.com/api/Boat/Search/";
+  rechercheDeBateau = "https://iwa2021.edriki.com/api/Boat/Search/fee";
 
-  // rechercher($event:any){
-  //   var term = $event.target.value;
+  constructor(
+    private http: HttpClient) {}
 
-  //   if(term.lenght >= minString && term.lenght <= maxString){
-  //     console.log($event.target.value);
-  //   }
-  // }
+  rechercher(event:any){
+    var term = event.target.value;
 
-  constructor() { }
+    if(term.lenght >= this.minString && term.lenght <= this.maxString){
+      console.log(event.target.value);
+      this.http.get<any>(this.rechercheDeBateau+term).subscribe(
+      respond => {
+      console.log(respond);
+      var liste = new Array;
+      respond.response.datas.forEach(function(value:any){
+        var obj = {"ref":value.ref,"name":value.name};
+        liste.push(obj);
+      });
+    })
+    }
+    
+  }
 
-  // private http: HttpClient
   ngOnInit(): void {
-    // this.http;get<any>(this.rechercheDeBateau).subscribe(respond
-    // =>{
-    //   console.log(respond);
-    //   var liste = new Array;
-    //   respond.response.datas.forEach(function(value:any){
-    //     var obj = {"ref":value.ref,"name":value.name};
-    //     liste.push(obj);
-    //   });
-    // })
   }
 
 }
